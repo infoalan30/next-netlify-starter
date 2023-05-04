@@ -1,16 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 
 export default function Home() {
   const [text, setText] = useState('');
+  const [history, setHistory] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Submitted text:', text);
-    // 这里可以将文本提交到服务器或进行其他操作
+    setHistory((prevHistory) => [...prevHistory, text]);
+    setText('');
   };
+
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('history');
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('history', JSON.stringify(history));
+  }, [history]);
 
   return (
     <div className="container">
@@ -31,6 +44,11 @@ export default function Home() {
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
+        <ul>
+          {history.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
       </main>
 
       <Footer />
