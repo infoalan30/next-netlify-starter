@@ -12,6 +12,16 @@ export default function Home() {
     console.log('Submitted text:', text);
     setHistory((prevHistory) => [...prevHistory, text]);
     setText('');
+
+    fetch('https://3501h4s369.goho.co/learn/clipnetlify.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ content: text })
+    })
+    .then(response => console.log(response))
+    .catch(error => console.error(error));
   };
 
   useEffect(() => {
